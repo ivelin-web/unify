@@ -10,6 +10,9 @@ import axios, { AxiosError } from "axios";
 import { toast } from "react-hot-toast";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import { joiResolver } from "@hookform/resolvers/joi";
+import registerSchema from "@/app/validations/validateRegister";
+import loginSchema from "@/app/validations/validateLogin";
 
 type Variant = "LOGIN" | "REGISTER";
 
@@ -18,26 +21,36 @@ const AuthForm = () => {
     const [variant, setVariant] = useState<Variant>("LOGIN");
     const [isLoading, setIsLoading] = useState(false);
 
-    const toggleVariant = useCallback(() => {
-        if (variant === "LOGIN") {
-            setVariant("REGISTER");
-            return;
-        }
-
-        setVariant("LOGIN");
-    }, [variant]);
-
     const {
         register,
+        unregister,
         handleSubmit,
         formState: { errors },
+        reset,
     } = useForm<FieldValues>({
         defaultValues: {
-            name: "",
             email: "",
             password: "",
         },
+        mode: "all",
+        resolver: joiResolver(variant === "LOGIN" ? loginSchema : registerSchema),
     });
+
+    const toggleVariant = useCallback(() => {
+        reset();
+
+        if (variant === "LOGIN") {
+            register("name", { value: "" });
+            register("confirmPassword", { value: "" });
+            setVariant("REGISTER");
+
+            return;
+        }
+
+        unregister("name");
+        unregister("confirmPassword");
+        setVariant("LOGIN");
+    }, [variant]);
 
     const onSubmit: SubmitHandler<FieldValues> = (data) => {
         setIsLoading(true);
@@ -46,6 +59,7 @@ const AuthForm = () => {
             axios
                 .post("/api/register", data)
                 .then(() => {
+                    toast.success("You have been registered");
                     signIn("credentials", data);
                 })
                 .catch(({ response }: AxiosError<{ message: string }>) => {
@@ -104,6 +118,7 @@ const AuthForm = () => {
                     {variant === "REGISTER" && <Input id="name" label="Name" type="text" register={register} errors={errors} disabled={isLoading} />}
                     <Input id="email" label="Email address" type="email" register={register} errors={errors} disabled={isLoading} />
                     <Input id="password" label="Password" type="password" register={register} errors={errors} disabled={isLoading} />
+                    {variant === "REGISTER" && <Input id="confirmPassword" label="Confirm Password" type="password" register={register} errors={errors} disabled={isLoading} />}
                     <div>
                         <Button disabled={isLoading} fullWidth type="submit">
                             {variant === "LOGIN" ? "Sign in" : "Register"}

@@ -21,7 +21,7 @@ export async function POST(req: Request) {
         const { userId, isGroup, members, name }: Body = await req.json();
 
         if (isGroup && (!members || members.length < 2 || !name)) {
-            return NextResponse.json({ message: "Invalid data" }, { status: 400 });
+            return NextResponse.json({ message: "Group chat must contain at least 3 members" }, { status: 400 });
         }
 
         if (isGroup) {
