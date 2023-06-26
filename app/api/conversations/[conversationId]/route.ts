@@ -28,7 +28,7 @@ export async function DELETE(req: Request, { params: { conversationId } }: Param
             return NextResponse.json({ message: "Invalid ID" }, { status: 400 });
         }
 
-        const deletedConversation = await prisma.conversation.deleteMany({
+        await prisma.conversation.deleteMany({
             where: {
                 id: conversationId,
                 userIds: {
@@ -43,7 +43,7 @@ export async function DELETE(req: Request, { params: { conversationId } }: Param
             }
         });
 
-        return NextResponse.json(deletedConversation);
+        return NextResponse.json({ message: "Conversation has been deleted successfully" });
     } catch (error) {
         console.log(error, "ERROR_CONVERSATION_DELETE");
 

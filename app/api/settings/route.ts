@@ -16,7 +16,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
         }
 
-        const updatedUser = await prisma.user.update({
+        await prisma.user.update({
             where: {
                 id: currentUser.id,
             },
@@ -26,7 +26,7 @@ export async function POST(req: Request) {
             },
         });
 
-        return NextResponse.json(updatedUser);
+        return NextResponse.json({ message: "Profile is updated successfully" });
     } catch (error) {
         console.log(error, "ERROR_SETTINGS");
 

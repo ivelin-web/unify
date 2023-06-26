@@ -36,7 +36,7 @@ export async function POST(req: Request, { params: { conversationId } }: Params)
         const lastMessage = conversation.messages[conversation.messages.length - 1];
 
         if (!lastMessage) {
-            return NextResponse.json(conversation);
+            return NextResponse.json({ message: "No messages to seen" });
         }
 
         const updatedMessage = await prisma.message.update({
@@ -62,12 +62,12 @@ export async function POST(req: Request, { params: { conversationId } }: Params)
         });
 
         if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
-            return NextResponse.json(conversation);
+            return NextResponse.json({ message: "Message has been seen successfully" });
         }
 
         await pusherServer.trigger(conversationId!, "message:update", updatedMessage);
 
-        return NextResponse.json(updatedMessage);
+        return NextResponse.json({ message: "Message has been seen successfully" });
     } catch (error) {
         console.log(error, "ERROR_MESSAGES_SEEN");
 
