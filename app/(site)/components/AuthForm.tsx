@@ -113,7 +113,7 @@ const AuthForm = () => {
 
     return (
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-            <div className="bg-white px-44 py-8 shadow sm:rounded-lg sm:px-10">
+            <div className="bg-white px-10 py-8 shadow sm:rounded-lg">
                 <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                     {variant === "REGISTER" && <Input id="name" label="Name" type="text" register={register} errors={errors} disabled={isLoading} />}
                     <Input id="email" label="Email address" type="email" register={register} errors={errors} disabled={isLoading} />
@@ -134,7 +134,7 @@ const AuthForm = () => {
                             <span className="bg-white px-2 text-gray-500">Or continue with</span>
                         </div>
                     </div>
-                    <div className="mt-6 flex gap-2">
+                    <div className="mt-6 flex flex-col sm:flex-row gap-2">
                         <AuthSocialButton icon={BsGithub} onClick={() => socialAction("github")} />
                         <AuthSocialButton icon={BsGoogle} onClick={() => socialAction("google")} />
                     </div>

@@ -1,7 +1,12 @@
 import prisma from "@/app/lib/prismadb";
 import getSession from "./getSession";
+import { Prisma, User } from "@prisma/client";
 
-const getUsers = async () => {
+type Props = {
+    select: Prisma.UserSelect;
+};
+
+const getUsers = async ({ select }: Props) => {
     const session = await getSession();
 
     if (!session?.user?.email) {
@@ -18,9 +23,10 @@ const getUsers = async () => {
                     email: session.user.email,
                 },
             },
+            select,
         });
 
-        return users;
+        return users as User[];
     } catch (error) {
         return [];
     }

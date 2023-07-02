@@ -1,7 +1,13 @@
 import prisma from "@/app/lib/prismadb";
 import getCurrentUser from "./getCurrentUser";
+import { Prisma } from "@prisma/client";
+import { FullConversationType } from "@/typings";
 
-const getConversations = async () => {
+type Props = {
+    select: Prisma.ConversationSelect;
+};
+
+const getConversations = async ({ select }: Props) => {
     const currentUser = await getCurrentUser();
 
     if (!currentUser?.id) {
@@ -18,18 +24,10 @@ const getConversations = async () => {
                     has: currentUser.id,
                 },
             },
-            include: {
-                users: true,
-                messages: {
-                    include: {
-                        sender: true,
-                        seen: true,
-                    },
-                },
-            },
+            select,
         });
 
-        return conversations;
+        return conversations as FullConversationType[];
     } catch (error) {
         return [];
     }

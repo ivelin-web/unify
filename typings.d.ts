@@ -3,7 +3,7 @@ import { IconType } from "react-icons";
 
 type RouteItem = {
     label?: string;
-    href: string;
+    href?: string;
     icon: IconType;
     active?: boolean;
     onClick?: () => void;

@@ -36,7 +36,7 @@ const ConfirmModal: React.FC<Props> = ({ isOpen, onClose }) => {
             .finally(() => {
                 setIsLoading(false);
             });
-    }, [conversationId, router]);
+    }, [conversationId, router, onClose]);
 
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
@@ -53,12 +53,12 @@ const ConfirmModal: React.FC<Props> = ({ isOpen, onClose }) => {
                     </div>
                 </div>
             </div>
-            <div className="mt-5 sm:mt-4 sm:flex sm:gap-3 sm:flex-row-reverse">
-                <Button disabled={isLoading} danger onClick={onDelete}>
-                    Delete
-                </Button>
+            <div className="mt-6 flex items-center justify-end gap-x-6">
                 <Button disabled={isLoading} secondary onClick={onClose}>
                     Cancel
+                </Button>
+                <Button disabled={isLoading} danger onClick={onDelete}>
+                    Delete
                 </Button>
             </div>
         </Modal>

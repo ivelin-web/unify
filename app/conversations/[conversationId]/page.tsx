@@ -4,6 +4,7 @@ import Header from "./components/Header";
 import Body from "./components/Body";
 import Form from "./components/Form";
 import { notFound } from "next/navigation";
+import { Prisma } from "@prisma/client";
 
 type Params = {
     params: { conversationId: string };
@@ -11,7 +12,28 @@ type Params = {
 
 const Conversation = async ({ params: { conversationId } }: Params) => {
     const conversation = await getConversationById(conversationId);
-    const messages = await getMessages(conversationId);
+
+    const select = {
+        id: true,
+        image: true,
+        createdAt: true,
+        body: true,
+        sender: {
+            select: {
+                email: true,
+                name: true,
+                image: true
+            }
+        },
+        seen: {
+            select: {
+                email: true,
+                name: true
+            }
+        }
+    } satisfies Prisma.MessageSelect;
+
+    const messages = await getMessages({ conversationId, select });
 
     if (!conversation) {
         return notFound();

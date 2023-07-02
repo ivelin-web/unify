@@ -1,21 +1,25 @@
 import prisma from "@/app/lib/prismadb";
+import { FullMessageType } from "@/typings";
+import { Prisma } from "@prisma/client";
 
-const getMessages = async (conversationId: string) => {
+type Props = {
+    conversationId: string;
+    select: Prisma.MessageSelect;
+};
+
+const getMessages = async ({ conversationId, select }: Props) => {
     try {
         const messages = await prisma.message.findMany({
             where: {
                 conversationId,
             },
-            include: {
-                sender: true,
-                seen: true,
-            },
+            select,
             orderBy: {
                 createdAt: "asc",
             },
         });
 
-        return messages;
+        return messages as FullMessageType[];
     } catch (error) {
         return [];
     }
