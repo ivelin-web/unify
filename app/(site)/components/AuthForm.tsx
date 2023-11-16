@@ -144,9 +144,6 @@ const AuthForm = () => {
                     <div onClick={toggleVariant} className="underline cursor-pointer">
                         {variant === "LOGIN" ? "Create an account" : "Sign in"}
                     </div>
-                    <div>
-                      <a href="geo:59.381023,16.485929">Open in Maps</a>
-                    </div>
                 </div>
             </div>
         </div>
